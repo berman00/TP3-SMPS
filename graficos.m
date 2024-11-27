@@ -146,6 +146,8 @@ media_V_salida_plot = media_V_salida * ones(1,2);
 media_I_salida_plot = media_I_salida * ones(1,2);
 
 
+
+
 subplot(211)
 hold on
 grid on
@@ -172,12 +174,34 @@ title("Corriente de salida")
 ripple_V = max(V_output.Data(3000:end)) - min(V_output.Data(3000:end)) % pico a pico [V]
 ripple_I = max(I_output.Data(3000:end)) - min(I_output.Data(3000:end)) % pico a pico [A]
 
+%% senoide para comparar con salida
+t = t0:(tf-t0)/1000:tf;
+amplitud = max(V_output.Data(3000:end)) - media_V_salida;
+senoide = media_V_salida + (amplitud/1.7 ) * sin(t*(1/2e-6)*2*pi+pi);
+
+figure
+hold on
+grid on
+plot(V_output)
+plot(t, senoide)
+xlim([t0, tf])
+ylim([7.991, 7.997])
+ylabel("Tensión [V]")
+xlabel("Tiempo [seg]")
+
 %% Corriente en los capacitores
 
 figure
 hold on
 grid on
-plot(I_cap1)
-plot(I_cap2, '.')
+plot(I_cap1, 'LineWidth', 1)
+plot(I_cap2, '.', 'LineWidth', 2)
 xlim([t0, tf])
 legend('C1', 'C2')
+ylabel("Corriente [A]")
+xlabel("Tiempo [seg]")
+title("Corriente por los capacitores")
+
+
+
+
