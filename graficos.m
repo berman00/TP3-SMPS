@@ -178,6 +178,6 @@ figure
 hold on
 grid on
 plot(I_cap1)
-plot(I_cap2)
+plot(I_cap2, '.')
 xlim([t0, tf])
-legend
+legend('C1', 'C2')
