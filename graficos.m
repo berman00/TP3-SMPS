@@ -8,7 +8,7 @@ T_con = 4e-6; % [seg] periodo de conmutacion. no cambia la simulacion
 
 % plots
 t0 = T_con * 100; % multiplo del periodo de conmutacion para que se vea mas lindo
-duracion_ciclos = 6;
+duracion_ciclos = 4;
 tf = t0 + T_con * duracion_ciclos;
 
 % simulacion
@@ -77,8 +77,8 @@ tiempo_integracion = I_inductor1.Time(end) - I_inductor1.Time(pasos_estacionario
 media_I_inductor_1 = (1/tiempo_integracion)*trapz(I_inductor1.Time(pasos_estacionario:end), I_inductor1.Data(pasos_estacionario:end));
 media_I_inductor_2 = (1/tiempo_integracion)*trapz(I_inductor2.Time(pasos_estacionario:end), I_inductor2.Data(pasos_estacionario:end));
 
-media_I_inductor_1_plot = media_I_inductor_1 * ones(2);
-media_I_inductor_2_plot = media_I_inductor_2 * ones(2);
+media_I_inductor_1_plot = media_I_inductor_1 * ones(1,2);
+media_I_inductor_2_plot = media_I_inductor_2 * ones(1,2);
 
 subplot(212)
 hold on
@@ -86,10 +86,50 @@ plot(I_inductor1)
 plot(I_inductor2)
 plot([t0, tf], media_I_inductor_1_plot, 'b--')
 plot([t0, tf], media_I_inductor_2_plot, 'r--')
-legend('L1', 'L2', 'Prom L1', 'Prom L2')
+legend('L1', 'L2', 'Val Medio L1', 'Val Medio L2')
 xlim([t0, tf])
 ylim([7.4, 8.6])
 ylabel("Corriente [A]")
 xlabel("Tiempo [seg]")
+
+
+% corriente en el transitorio
+% explica porque una es mas grande que la otra
+
+figure
+subplot(211)
+title('Transitorio en los inductores')
+hold on
+plot(V_inductor1)
+plot(V_inductor2)
+xlim([0, 10*T_con])
+ylabel("Tensión [V]")
+xlabel("Tiempo [seg]")
+legend('L1', 'L2')
+
+subplot(212)
+hold on
+plot(I_inductor1)
+plot(I_inductor2)
+xlim([0, 10*T_con])
+ylabel("Corriente [A]")
+xlabel("Tiempo [seg]")
+legend('L1', 'L2')
+
+%% salida
+
+
+figure
+
+subplot(211)
+plot(V_output)
+xlim([t0, tf])
+ylim([7.991, 7.997])
+
+subplot(212)
+plot(I_output)
+xlim([t0, tf])
+
+
 
 
