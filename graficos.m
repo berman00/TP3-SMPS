@@ -21,8 +21,8 @@ duty_cycle =  26.6667; % [%] original
 sim("Problema4_1")
 
 % calculo valor medio
-pasos_estacionario = 3000; % pasos para entrar en estado estacionario
-% plot(I_inductor1.Data(3000:end))
+pasos_estacionario = 6000; % pasos para entrar en estado estacionario
+% plot(I_inductor1.Data(5000:end))
 tiempo_integracion = I_inductor1.Time(end) - I_inductor1.Time(pasos_estacionario);
 
 
@@ -171,13 +171,13 @@ title("Corriente de salida")
 
 %% calculo ripple
 
-ripple_V = max(V_output.Data(3000:end)) - min(V_output.Data(3000:end)) % pico a pico [V]
-ripple_I = max(I_output.Data(3000:end)) - min(I_output.Data(3000:end)) % pico a pico [A]
+ripple_V = max(V_output.Data(pasos_estacionario:end)) - min(V_output.Data(pasos_estacionario:end)) % pico a pico [V]
+ripple_I = max(I_output.Data(pasos_estacionario:end)) - min(I_output.Data(pasos_estacionario:end)) % pico a pico [A]
 
 %% senoide para comparar con salida
 t = t0:(tf-t0)/1000:tf;
-amplitud = max(V_output.Data(3000:end)) - media_V_salida;
-senoide = media_V_salida + (amplitud/1.7 ) * sin(t*(1/2e-6)*2*pi+pi);
+amplitud = max(V_output.Data(pasos_estacionario:end)) - media_V_salida;
+senoide = media_V_salida + (amplitud) * sin(t*(1/2e-6)*2*pi+pi);
 
 figure
 hold on
