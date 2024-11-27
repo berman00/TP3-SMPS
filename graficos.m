@@ -12,10 +12,6 @@ duracion_ciclos = 3;
 
 tf = t0 + T_con * duracion_ciclos;
 
-% calculo valor medio
-pasos_estacionario = 3000; % pasos para entrar en estado estacionario
-% plot(I_inductor1.Data(3000:end))
-tiempo_integracion = I_inductor1.Time(end) - I_inductor1.Time(pasos_estacionario);
 
 % simulacion
 duty_cycle =  26.6667; % [%] original
@@ -23,6 +19,12 @@ duty_cycle =  26.6667; % [%] original
 
 %%
 sim("Problema4_1")
+
+% calculo valor medio
+pasos_estacionario = 3000; % pasos para entrar en estado estacionario
+% plot(I_inductor1.Data(3000:end))
+tiempo_integracion = I_inductor1.Time(end) - I_inductor1.Time(pasos_estacionario);
+
 
 %% corriente de entrada
 
@@ -163,3 +165,12 @@ title("Corriente de salida")
 ripple_V = max(V_output.Data(3000:end)) - min(V_output.Data(3000:end)) % pico a pico [V]
 ripple_I = max(I_output.Data(3000:end)) - min(I_output.Data(3000:end)) % pico a pico [A]
 
+%% Corriente en los capacitores
+
+figure
+hold on
+grid on
+plot(I_cap1)
+plot(I_cap2)
+xlim([t0, tf])
+legend
