@@ -8,7 +8,8 @@ T_con = 4e-6; % [seg] periodo de conmutacion. no cambia la simulacion
 
 % plots
 t0 = T_con * 100; % multiplo del periodo de conmutacion para que se vea mas lindo
-duracion_ciclos = 4;
+duracion_ciclos = 3;
+
 tf = t0 + T_con * duracion_ciclos;
 
 % simulacion
