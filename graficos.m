@@ -24,6 +24,7 @@ sim("Problema4_1")
 % transitorio
 figure
 plot(I_input)
+grid on;
 xlim([0,  1e-4])
 ylabel("Corriente [A]")
 xlabel("Tiempo [seg]")
@@ -33,6 +34,7 @@ title("Transitorio de corriente de entrada")
 % regimen estacionario
 figure
 plot(I_input)
+grid on;
 xlim([t0,  tf]) % Musestreo 6 ciclos de conmutacion
 ylabel("Corriente [A]")
 xlabel("Tiempo [seg]")
@@ -43,10 +45,11 @@ title("Corriente de entrada")
 
 figure
 hold on
-plot(pulses, 'LineWidth', 1)
+grid on;
+plot(pulses, 'LineWidth', 1.5)
 xlim([t0, tf])
 ylim([0, 1.05])
-
+title("Señal PWM");
 ylabel("Señal de control")
 xlabel("Tiempo [seg]")
 
@@ -58,6 +61,7 @@ figure
 title('Tensión y corriente por los inductores')
 subplot(211)
 hold on
+grid on;
 plot(V_inductor1)
 plot(V_inductor2)
 xlim([t0, tf])
@@ -83,6 +87,7 @@ media_I_inductor_2_plot = media_I_inductor_2 * ones(1,2);
 
 subplot(212)
 hold on
+grid on;
 plot(I_inductor1)
 plot(I_inductor2)
 plot([t0, tf], media_I_inductor_1_plot, 'b--')
@@ -101,8 +106,9 @@ figure
 subplot(211)
 title('Transitorio en los inductores')
 hold on
-plot(V_inductor1)
-plot(V_inductor2)
+grid on;
+plot(V_inductor1,'LineWidth', 1.5)
+plot(V_inductor2,'LineWidth', 1.5)
 xlim([0, 10*T_con])
 ylabel("Tensión [V]")
 xlabel("Tiempo [seg]")
@@ -110,8 +116,9 @@ legend('L1', 'L2')
 
 subplot(212)
 hold on
-plot(I_inductor1)
-plot(I_inductor2)
+grid on;
+plot(I_inductor1,'LineWidth', 1.5)
+plot(I_inductor2,'LineWidth', 1.5)
 xlim([0, 10*T_con])
 ylabel("Corriente [A]")
 xlabel("Tiempo [seg]")
