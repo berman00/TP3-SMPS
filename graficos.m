@@ -12,6 +12,11 @@ duracion_ciclos = 3;
 
 tf = t0 + T_con * duracion_ciclos;
 
+% calculo valor medio
+pasos_estacionario = 3000; % pasos para entrar en estado estacionario
+% plot(I_inductor1.Data(3000:end))
+tiempo_integracion = I_inductor1.Time(end) - I_inductor1.Time(pasos_estacionario);
+
 % simulacion
 duty_cycle =  26.6667; % [%] original
 
@@ -65,12 +70,10 @@ ylim([-10, 23])
 ylabel("Tensión [V]")
 xlabel("Tiempo [seg]")
 legend('L1', 'L2')
+title('Tensión en el inductor')
 
 % corriente
 % valor medio
-pasos_estacionario = 3000; % pasos para entrar en estado estacionario
-% plot(I_inductor1.Data(3000:end))
-tiempo_integracion = I_inductor1.Time(end) - I_inductor1.Time(pasos_estacionario);
 
 % calculo valor medio como 1/T * int_0^T I(t) dt
 % si uso la funcion mean da un resultado incorrecto porque el paso de
@@ -92,14 +95,13 @@ xlim([t0, tf])
 ylim([7.4, 8.6])
 ylabel("Corriente [A]")
 xlabel("Tiempo [seg]")
-
+title('Corriente en el inductor')
 
 % corriente en el transitorio
 % explica porque una es mas grande que la otra
 
 figure
 subplot(211)
-title('Transitorio en los inductores')
 hold on
 plot(V_inductor1)
 plot(V_inductor2)
@@ -107,6 +109,7 @@ xlim([0, 10*T_con])
 ylabel("Tensión [V]")
 xlabel("Tiempo [seg]")
 legend('L1', 'L2')
+title('Tensión en el transitorio')
 
 subplot(212)
 hold on
@@ -116,21 +119,47 @@ xlim([0, 10*T_con])
 ylabel("Corriente [A]")
 xlabel("Tiempo [seg]")
 legend('L1', 'L2')
+title('Corriente en el transitorio')
 
 %% salida
 
 
 figure
 
+
+% calculo valor medio como 1/T * int_0^T I(t) dt
+% si uso la funcion mean da un resultado incorrecto porque el paso de
+% integracion es variable
+media_V_salida = (1/tiempo_integracion)*trapz(V_output.Time(pasos_estacionario:end), V_output.Data(pasos_estacionario:end));
+media_I_salida = (1/tiempo_integracion)*trapz(I_output.Time(pasos_estacionario:end), I_output.Data(pasos_estacionario:end));
+
+media_V_salida_plot = media_V_salida * ones(1,2);
+media_I_salida_plot = media_I_salida * ones(1,2);
+
+
 subplot(211)
+hold on
+grid on
 plot(V_output)
+plot([t0, tf], media_V_salida_plot, 'b--')
 xlim([t0, tf])
 ylim([7.991, 7.997])
+ylabel("Tensión [V]")
+xlabel("Tiempo [seg]")
+title("Tensión de salida")
 
 subplot(212)
+hold on
+grid on
 plot(I_output)
+plot([t0, tf], media_I_salida_plot, 'b--')
 xlim([t0, tf])
+ylabel("Corriente [A]")
+xlabel("Tiempo [seg]")
+title("Corriente de salida")
 
+%% calculo ripple
 
-
+ripple_V = max(V_output.Data(3000:end)) - min(V_output.Data(3000:end)) % pico a pico [V]
+ripple_I = max(I_output.Data(3000:end)) - min(I_output.Data(3000:end)) % pico a pico [A]
 
