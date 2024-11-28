@@ -433,3 +433,22 @@ xlim([t0, tf])
 ylabel("Corriente [A]")
 xlabel("Tiempo [seg]")
 title('Corriente en el inductor')
+
+%% Capacitores
+
+
+% corriente por los capacitores
+
+figure
+
+hold on
+grid on
+plot(I_C1, 'LineWidth', 1)
+plot(I_C2, '.', 'LineWidth', 3)
+xlim([t0, tf])
+legend('C1', 'C2')
+ylabel("Corriente [A]")
+xlabel("Tiempo [seg]")
+
+%% Salida
+
