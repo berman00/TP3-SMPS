@@ -265,3 +265,35 @@ grid on
 hold on
 plot(iter_duty_cycle, datos_V_normalizado)
 plot(iter_duty_cycle, datos_ripple_buck_normal)
+
+
+
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Problema 2
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+clear
+
+% parametros
+T_con = 4e-6; % [seg] periodo de conmutacion. no cambia la simulacion
+
+% plots
+t0 = T_con * 100; % multiplo del periodo de conmutacion para que se vea mas lindo
+duracion_ciclos = 3;
+
+tf = t0 + T_con * duracion_ciclos;
+
+
+% simulacion
+duty_cycle =  53.84; % [%] original
+
+
+%% 
+
+sim('Problema4_2')
+
+pasos_estacionario = find(tout > 0.002, 1);
+
+tiempo_integracion = tout(end) - tout(pasos_estacionario);
