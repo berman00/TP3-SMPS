@@ -203,5 +203,97 @@ xlabel("Tiempo [seg]")
 title("Corriente por los capacitores")
 
 
+%% Graficos del ripple para distintos duty cycle
+% tarda mucho en ejecutarse
+
+iteraciones = 21;
+
+datos_V_ripple = zeros(1, iteraciones);
+datos_I_ripple = zeros(1, iteraciones);
+
+datos_V_normalizado = zeros(1, iteraciones);
+
+datos_ripple_buck_normal = zeros(1, iteraciones);
+
+datos_V_output = zeros(1, iteraciones);
 
 
+iter_duty_cycle = 1:(98)/(iteraciones-1):99;
+
+indx=1:iteraciones;
+
+for i = indx
+    duty_cycle = iter_duty_cycle(i);
+    sim('Problema4_1')
+    
+    % como tengo paso de simulacion variable, el paso de simulucion cambia
+    % con el duty cycle
+    pasos_estacionario = find(V_output.Time > 5e-4, 1); 
+    tiempo_integracion = I_inductor1.Time(end) - I_inductor1.Time(pasos_estacionario);
+                                       
+    datos_V_ripple(i) = max(V_output.Data(pasos_estacionario:end)) - min(V_output.Data(pasos_estacionario:end));
+    datos_I_ripple(i) = max(I_output.Data(pasos_estacionario:end)) - min(I_output.Data(pasos_estacionario:end)); % pico a pico [A]
+
+    V_salida = (1/tiempo_integracion)*trapz(V_output.Time(pasos_estacionario:end), V_output.Data(pasos_estacionario:end));
+    
+    datos_V_output(i) = V_salida;
+    
+    datos_V_normalizado(i) = datos_V_ripple(i)/V_salida;
+   
+    
+end
+
+
+figure
+hold on
+grid on
+yyaxis left
+plot(iter_duty_cycle, datos_V_ripple)
+yyaxis right
+plot(iter_duty_cycle, datos_I_ripple)
+
+
+% ripple normalizado calculado para un buck normal
+% para que sea igual hay q dividir por 4, que es lo mimso que decir que
+% tengo el doble de capacidad y el doble de inductacia. Tiene sentido tener
+% el doble de capaciada pq tengo C1 y C2 en paralelo, pero el doble de
+% inductancia?
+datos_ripple_buck_normal = (1/8) * (1/4) * (T_con^2*(1-(iter_duty_cycle/100)))/(11e-6*38.8e-6);
+
+figure
+grid on
+hold on
+plot(iter_duty_cycle, datos_V_normalizado)
+plot(iter_duty_cycle, datos_ripple_buck_normal)
+
+
+
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Problema 2
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+clear
+
+% parametros
+T_con = 4e-6; % [seg] periodo de conmutacion. no cambia la simulacion
+
+% plots
+t0 = T_con * 100; % multiplo del periodo de conmutacion para que se vea mas lindo
+duracion_ciclos = 3;
+
+tf = t0 + T_con * duracion_ciclos;
+
+
+% simulacion
+duty_cycle =  53.84; % [%] original
+
+
+%% 
+
+sim('Problema4_2')
+
+pasos_estacionario = find(tout > 0.002, 1);
+
+tiempo_integracion = tout(end) - tout(pasos_estacionario);
