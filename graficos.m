@@ -323,6 +323,7 @@ grid on
 
 plot(I_inductor1, 'LineWidth', 1.5)
 plot(I_inductor2, 'LineWidth', 1.5)
+xlim([t0, tf])
 legend('L1', 'L2')
 ylabel("Corriente [A]")
 xlabel("Tiempo [seg]")
@@ -452,3 +453,104 @@ xlabel("Tiempo [seg]")
 
 %% Salida
 
+figure
+
+media_V_salida = (1/tiempo_integracion)*trapz(tout(pasos_estacionario:end), V_output.Data(pasos_estacionario:end));
+media_I_salida = (1/tiempo_integracion)*trapz(tout(pasos_estacionario:end), I_output.Data(pasos_estacionario:end));
+
+media_V_salida_plot = media_V_salida * ones(1,2);
+media_I_salida_plot = media_I_salida * ones(1,2);
+
+
+subplot(211)
+hold on
+grid on
+plot(V_output)
+plot([t0, tf], media_V_salida_plot, 'b--')
+ylabel("Tensión [V]")
+xlabel("Tiempo [seg]")
+xlim([t0, tf])
+
+ylim([25.94, 26.01])
+
+
+subplot(212)
+hold on
+grid on
+plot(I_output)
+plot([t0, tf], media_I_salida_plot, 'b--')
+xlim([t0, tf])
+ylabel("Corriente [A]")
+xlabel("Tiempo [seg]")
+
+%% Calculo de ripple
+
+ripple_V = max(V_output.Data(pasos_estacionario:end)) - min(V_output.Data(pasos_estacionario:end))
+ripple_I = max(I_output.Data(pasos_estacionario:end)) - min(I_output.Data(pasos_estacionario:end))
+
+
+%% Duty cicle
+
+
+iteraciones = 21;
+
+datos_V_ripple = zeros(1, iteraciones);
+datos_I_ripple = zeros(1, iteraciones);
+
+datos_V_normalizado = zeros(1, iteraciones);
+
+datos_V_output = zeros(1, iteraciones);
+
+
+iter_duty_cycle = 1:(89)/(iteraciones-1):90;
+
+indx=1:iteraciones;
+
+figure
+hold on
+
+for i = indx
+    duty_cycle = iter_duty_cycle(i);
+    sim('Problema4_2')
+    
+    % como tengo paso de simulacion variable, el paso de simulucion cambia
+    % con el duty cycle
+    pasos_estacionario = find(tout > 2e-3, 1); 
+    tiempo_integracion = tout(end) - tout(pasos_estacionario);
+                                       
+    datos_V_ripple(i) = max(V_output.Data(pasos_estacionario:end)) - min(V_output.Data(pasos_estacionario:end));
+    datos_I_ripple(i) = max(I_output.Data(pasos_estacionario:end)) - min(I_output.Data(pasos_estacionario:end)); % pico a pico [A]
+
+    V_salida = (1/tiempo_integracion)*trapz(V_output.Time(pasos_estacionario:end), V_output.Data(pasos_estacionario:end));
+    
+    datos_V_output(i) = V_salida;
+    
+    datos_V_normalizado(i) = datos_V_ripple(i)/V_salida;
+    
+    plot(V_output - V_salida)
+   
+    
+end
+
+xlim([t0, tf])
+legend(string(iter_duty_cycle))
+
+figure
+hold on
+grid on
+yyaxis left
+plot(iter_duty_cycle, datos_V_ripple)
+yyaxis right
+plot(iter_duty_cycle, datos_I_ripple)
+
+% rippleV/Vout = ( duty_cycle*T_con )/( RL * C )
+datos_ripple_boost_normal = ( (iter_duty_cycle/100) * T_con/2 )/( 1.625 * 22e-6 );
+
+figure
+grid on
+hold on
+plot(iter_duty_cycle, datos_V_normalizado, 'LineWidth', 1.5)
+plot(iter_duty_cycle, datos_ripple_boost_normal, 'LineWidth', 1.5)
+xlabel('Duty Cycle \delta [%]')
+ylabel('Ripple normalizado {\Delta}V_{out}/V_{out} [V]')
+legend('Multifase', 'Convencional')
