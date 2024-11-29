@@ -365,22 +365,22 @@ tiempo_integracion = tout(end) - tout(pasos_estacionario);
 
 % transitorio
 figure
-plot(I_input)
+plot(I_input,'LineWidth',1.5)
 grid on;
 xlim([0,  2e-4])
 ylabel("Corriente [A]")
 xlabel("Tiempo [seg]")
-title("Problema 2/nTransitorio de corriente de entrada")
+title("Transitorio de corriente de entrada")
 
 
 % regimen estacionario
 figure
-plot(I_input)
+plot(I_input, 'LineWidth',1.5)
 grid on;
 xlim([t0,  tf]) % Musestreo 6 ciclos de conmutacion
 ylabel("Corriente [A]")
 xlabel("Tiempo [seg]")
-title("Problema 2/nCorriente de entrada")
+title("Corriente de entrada")
 
 
 %% pulsos
@@ -402,8 +402,8 @@ figure
 subplot(211)
 hold on
 grid on;
-plot(V_L1)
-plot(V_L2)
+plot(V_L1 , 'LineWidth',1.2)
+plot(V_L2 , 'LineWidth',1.2)
 xlim([t0, tf])
 ylabel("Tensión [V]")
 xlabel("Tiempo [seg]")
@@ -425,11 +425,12 @@ media_I_inductor_2_plot = media_I_inductor_2 * ones(1,2);
 subplot(212)
 hold on
 grid on;
-plot(I_L1)
-plot(I_L2)
-plot([t0, tf], media_I_inductor_1_plot, 'b--', 'LineWidth', 1.5)
-plot([t0, tf], media_I_inductor_2_plot, 'r--', 'LineWidth', 0.8)
-legend('L1', 'L2', 'Val Medio L1', 'Val Medio L2')
+plot(I_L1 , 'LineWidth',1.2)
+plot(I_L2 , 'LineWidth',1.2)
+% plot([t0, tf], media_I_inductor_1_plot, 'b--', 'LineWidth', 1.5)
+% plot([t0, tf], media_I_inductor_2_plot, 'r--', 'LineWidth', 0.8)
+% legend('L1', 'L2', 'Val Medio L1', 'Val Medio L2')
+legend('L1','L2')
 xlim([t0, tf])
 ylabel("Corriente [A]")
 xlabel("Tiempo [seg]")
@@ -441,10 +442,20 @@ title('Corriente en el inductor')
 % corriente por los capacitores
 
 figure
+subplot(211)
 
+plot(pulses, 'LineWidth', 1.5)
+hold on
+grid on;
+xlim([t0, tf])
+ylim([0, 1.05])
+ylabel("Señal de control")
+xlabel("Tiempo [seg]")
+
+subplot(212)
+plot(I_C1, 'LineWidth', 1)
 hold on
 grid on
-plot(I_C1, 'LineWidth', 1)
 plot(I_C2, '.', 'LineWidth', 3)
 xlim([t0, tf])
 legend('C1', 'C2')
@@ -465,8 +476,9 @@ media_I_salida_plot = media_I_salida * ones(1,2);
 subplot(211)
 hold on
 grid on
-plot(V_output)
-plot([t0, tf], media_V_salida_plot, 'b--')
+plot(pulses, 'LineWidth', 1)
+plot(V_output, 'LineWidth', 1.5, 'Color', 'r')
+plot([t0, tf], media_V_salida_plot, 'b--', 'Color', 'r')
 ylabel("Tensión [V]")
 xlabel("Tiempo [seg]")
 xlim([t0, tf])
@@ -477,7 +489,7 @@ ylim([25.94, 26.01])
 subplot(212)
 hold on
 grid on
-plot(I_output)
+plot(I_output, 'LineWidth', 1.5)
 plot([t0, tf], media_I_salida_plot, 'b--')
 xlim([t0, tf])
 ylabel("Corriente [A]")
