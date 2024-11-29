@@ -492,17 +492,21 @@ ripple_I = max(I_output.Data(pasos_estacionario:end)) - min(I_output.Data(pasos_
 %% Duty cicle
 
 
-iteraciones = 21;
+iteraciones = 16;
 
 datos_V_ripple = zeros(1, iteraciones);
 datos_I_ripple = zeros(1, iteraciones);
 
 datos_V_normalizado = zeros(1, iteraciones);
+datos_I_normalizado = zeros(1, iteraciones);
 
 datos_V_output = zeros(1, iteraciones);
+datos_I_output = zeros(1, iteraciones);
 
+low_dc = 1;
+high_dc = 85;
 
-iter_duty_cycle = 1:(89)/(iteraciones-1):90;
+iter_duty_cycle = low_dc:(high_dc - low_dc)/(iteraciones-1):high_dc;
 
 indx=1:iteraciones;
 
@@ -522,10 +526,13 @@ for i = indx
     datos_I_ripple(i) = max(I_output.Data(pasos_estacionario:end)) - min(I_output.Data(pasos_estacionario:end)); % pico a pico [A]
 
     V_salida = (1/tiempo_integracion)*trapz(V_output.Time(pasos_estacionario:end), V_output.Data(pasos_estacionario:end));
+    I_salida = (1/tiempo_integracion)*trapz(tout(pasos_estacionario:end), I_output.Data(pasos_estacionario:end));
     
     datos_V_output(i) = V_salida;
+    datos_I_output(i) = I_salida;
     
     datos_V_normalizado(i) = datos_V_ripple(i)/V_salida;
+    datos_I_normalizado(i) = datos_I_ripple(i)/I_salida;
     
     plot(V_output - V_salida)
    
@@ -535,22 +542,24 @@ end
 xlim([t0, tf])
 legend(string(iter_duty_cycle))
 
-figure
-hold on
-grid on
-yyaxis left
-plot(iter_duty_cycle, datos_V_ripple)
-yyaxis right
-plot(iter_duty_cycle, datos_I_ripple)
 
 % rippleV/Vout = ( duty_cycle*T_con )/( RL * C )
 datos_ripple_boost_normal = ( (iter_duty_cycle/100) * T_con/2 )/( 1.625 * 22e-6 );
 
+% V_ripple vs DC
 figure
 grid on
 hold on
 plot(iter_duty_cycle, datos_V_normalizado, 'LineWidth', 1.5)
-plot(iter_duty_cycle, datos_ripple_boost_normal, 'LineWidth', 1.5)
+%plot(iter_duty_cycle, datos_ripple_boost_normal, 'LineWidth', 1.5)
 xlabel('Duty Cycle \delta [%]')
 ylabel('Ripple normalizado {\Delta}V_{out}/V_{out} [V]')
-legend('Multifase', 'Convencional')
+%legend('Multifase', 'Convencional')
+
+% I_ripple vs DC
+figure
+grid on
+hold on
+plot(iter_duty_cycle, datos_I_normalizado, 'LineWidth', 1.5)
+xlabel('Duty Cycle \delta [%]')
+ylabel('Ripple normalizado {\Delta}I_{out}/I_{out} [V]')
