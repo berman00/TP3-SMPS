@@ -167,6 +167,7 @@ grid on
 plot(I_output)
 plot([t0, tf], media_I_salida_plot, 'b--')
 xlim([t0, tf])
+ylim([15.982, 15.994])
 ylabel("Corriente [A]")
 xlabel("Tiempo [seg]")
 title("Corriente de salida")
