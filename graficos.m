@@ -472,7 +472,7 @@ ylabel("Tensión [V]")
 xlabel("Tiempo [seg]")
 xlim([t0, tf])
 
-ylim([25.94, 26.01])
+%ylim([25.94, 26.01])
 
 
 subplot(212)
