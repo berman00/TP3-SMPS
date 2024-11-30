@@ -42,7 +42,7 @@ title("Transitorio de corriente de entrada")
 
 % regimen estacionario
 figure
-plot(I_input)
+plot(I_input, 'LineWidth', 1.5, 'color', 'r')
 grid on;
 xlim([t0,  tf]) % Musestreo 6 ciclos de conmutacion
 ylabel("Corriente [A]")
@@ -375,7 +375,7 @@ title("Transitorio de corriente de entrada")
 
 % regimen estacionario
 figure
-plot(I_input, 'LineWidth',1.5)
+plot(I_input, 'LineWidth',1.5, 'color', 'r')
 grid on;
 xlim([t0,  tf]) % Musestreo 6 ciclos de conmutacion
 ylabel("Corriente [A]")
